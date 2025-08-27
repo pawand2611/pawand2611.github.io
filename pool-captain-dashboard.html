@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pool Captain Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-bold text-red-600">Captain Dashboard</h1>
+            <button id="logoutButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+            </button>
+        </div>
+
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 text-yellow-600">Pending Players for <span id="poolNamePending" class="text-blue-600">Your Pool</span></h2>
+            <table class="w-full bg-white shadow-md rounded-lg">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="px-6 py-3 text-left">Name</th>
+                        <th class="px-6 py-3 text-left">Roll Number</th>
+                        <th class="px-6 py-3 text-left">Sport</th>
+                        <th class="px-6 py-3 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="pendingPlayersTable">
+                    <tr><td colspan="4" class="text-center p-8">Loading players...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-semibold mb-4 text-green-600">Verified Players in <span id="poolNameVerified" class="text-blue-600">Your Pool</span></h2>
+            <table class="w-full bg-white shadow-md rounded-lg">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="px-6 py-3 text-left">Name</th>
+                        <th class="px-6 py-3 text-left">Roll Number</th>
+                        <th class="px-6 py-3 text-left">Sport</th>
+                    </tr>
+                </thead>
+                <tbody id="verifiedPlayersTable">
+                    <tr><td colspan="3" class="text-center p-8">Loading players...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore-compat.js"></script>
+    <script>
+        // PASTE YOUR FIREBASE CONFIGURATION KEYS HERE
+        const firebaseConfig = { /* ... your keys ... */ };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const captainPools = {
+            "captain.peshwas@gsc.com": "Peshwas",
+            "captain.aryans@gsc.com": "Aryans",
+            "captain.kshatriyas@gsc.com": "Kshatriyas",
+            "captain.nawabs@gsc.com": "Nawabs",
+            "captain.bhishmas@gsc.com": "Bhishmas",
+            "captain.jodhabai@gsc.com": "Jodhabai",
+            "captain.laxmibai@gsc.com": "Laxmibai",
+            "captain.padmavati@gsc.com": "Padmavati",
+            "captain.durgavati@gsc.com": "Durgavati"
+            // Add all your other captain emails and pools here
+        };
+
+        let currentCaptainPool = null;
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentCaptainPool = captainPools[user.email];
+                if (currentCaptainPool) {
+                    document.getElementById('poolNamePending').textContent = currentCaptainPool;
+                    document.getElementById('poolNameVerified').textContent = currentCaptainPool;
+                    loadPlayersByStatus(currentCaptainPool, 'pending', 'pendingPlayersTable');
+                    loadPlayersByStatus(currentCaptainPool, 'verified', 'verifiedPlayersTable');
+                } else {
+                    document.body.innerHTML = '<h1>Access Denied: You are not a registered captain.</h1>';
+                }
+            } else {
+                window.location.href = 'captain-login.html';
+            }
+        });
+
+        function loadPlayersByStatus(pool, status, tableId) {
+            db.collection("players")
+              .where("pool", "==", pool)
+              .where("status", "==", status)
+              .orderBy("timestamp", "desc")
+              .onSnapshot(snapshot => {
+                  const tableBody = document.getElementById(tableId);
+                  if (snapshot.empty) {
+                      tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-8">No ${status} players for your pool.</td></tr>`;
+                      return;
+                  }
+                  let html = '';
+                  snapshot.forEach(doc => {
+                      const player = doc.data();
+                      html += `<tr class="border-b">
+                                  <td class="px-6 py-4">${player.name}</td>
+                                  <td class="px-6 py-4">${player.rollNumber}</td>
+                                  <td class="px-6 py-4">${player.sport}</td>`;
+                      if (status === 'pending') {
+                          html += `<td class="px-6 py-4 text-center">
+                                      <button onclick="verifyPlayer('${doc.id}')" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 mr-2">
+                                          <i class="fas fa-check"></i> Verify
+                                      </button>
+                                      <button onclick="rejectPlayer('${doc.id}')" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                                          <i class="fas fa-times"></i> Reject
+                                      </button>
+                                   </td>`;
+                      }
+                      html += `</tr>`;
+                  });
+                  tableBody.innerHTML = html;
+              });
+        }
+
+        function verifyPlayer(playerId) {
+            db.collection("players").doc(playerId).update({ status: "verified" });
+        }
+
+        function rejectPlayer(playerId) {
+            if (confirm("Are you sure you want to reject this player? This will permanently delete their registration.")) {
+                db.collection("players").doc(playerId).delete();
+            }
+        }
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            auth.signOut().then(() => {
+                window.location.href = 'captain-login.html';
+            });
+        });
+    </script>
+</body>
+</html>
