@@ -274,29 +274,50 @@
             </div>
         </div>
     </footer>
-
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore-compat.js"></script>
+    
     <script>
-        let players = [];
-        
+                // --- 1. INITIALIZE FIREBASE ---
+        // TODO: PASTE YOUR FIREBASE CONFIGURATION KEYS HERE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDp3jQqpYkuYo2TMaNTJ_CcXO0vDpQi2gA",
+            authDomain: "inferno-registration-gns.firebaseapp.com",
+            projectId: "inferno-registration-gns",
+            storageBucket: "inferno-registration-gns.firebasestorage.app",
+            messagingSenderId: "401258487719",
+            appId: "1:401258487719:web:6dcbd998e5f8a607c82082"
+        };
+
+        // Initialize Firebase and Firestore
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const playersCollection = db.collection('players'); // We'll store players in a "collection" called 'players'
+
+        // --- 2. GLOBAL VARIABLES & HELPER FUNCTIONS ---
+        let allPlayers = []; // This will hold the players from the database
+
         function getPoolClass(pool) {
-            return 'pool-' + pool.toLowerCase();
+            return 'pool-' + pool.toLowerCase().replace(' ', '-');
         }
 
+        // --- 3. RENDERING AND STATS FUNCTIONS (Updates the screen) ---
         function updateStats() {
-            document.getElementById('totalPlayers').textContent = players.length;
-            
-            const uniqueSports = [...new Set(players.map(p => p.sport))];
+            document.getElementById('totalPlayers').textContent = allPlayers.length;
+
+            const uniqueSports = [...new Set(allPlayers.map(p => p.sport))];
             document.getElementById('totalSports').textContent = uniqueSports.length;
-            
-            // Update pool distribution
+
             const poolCounts = {};
             const pools = ['Peshwas', 'Aryans', 'Kshatriyas', 'Nawabs', 'Bhishmas', 'Jodhabai', 'Laxmibai', 'Padmavati', 'Durgavati'];
             pools.forEach(pool => poolCounts[pool] = 0);
-            
-            players.forEach(player => {
-                poolCounts[player.pool]++;
+
+            allPlayers.forEach(player => {
+                if (poolCounts.hasOwnProperty(player.pool)) {
+                    poolCounts[player.pool]++;
+                }
             });
-            
+
             const poolStatsHtml = pools.map(pool => 
                 `<div class="text-center p-2 bg-gray-50 rounded">
                     <div class="pool-badge ${getPoolClass(pool)}">${pool}</div>
@@ -307,16 +328,15 @@
             document.getElementById('poolStats').innerHTML = poolStatsHtml;
         }
 
-        function renderPlayersTable(filteredPlayers = players) {
+        function renderPlayersTable(filteredPlayers = allPlayers) {
             const tbody = document.getElementById('playersTableBody');
             const noPlayersRow = document.getElementById('noPlayersRow');
-            
+
             if (filteredPlayers.length === 0) {
-                noPlayersRow.style.display = 'table-row';
                 tbody.innerHTML = noPlayersRow.outerHTML;
                 return;
             }
-            
+
             const playersHtml = filteredPlayers.map((player, index) => `
                 <tr class="hover:bg-gray-50 transition-colors duration-150">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
@@ -339,20 +359,21 @@
             tbody.innerHTML = playersHtml;
         }
 
+        // --- 4. FILTERING FUNCTIONS ---
         function filterPlayers() {
             const poolFilter = document.getElementById('poolFilter').value;
             const sportFilter = document.getElementById('sportFilter').value;
-            
-            let filteredPlayers = players;
-            
+
+            let filteredPlayers = allPlayers;
+
             if (poolFilter) {
                 filteredPlayers = filteredPlayers.filter(player => player.pool === poolFilter);
             }
-            
+
             if (sportFilter) {
                 filteredPlayers = filteredPlayers.filter(player => player.sport === sportFilter);
             }
-            
+
             renderPlayersTable(filteredPlayers);
         }
 
@@ -362,39 +383,55 @@
             renderPlayersTable();
         }
 
-        // Event Listeners
+        // --- 5. FIREBASE INTERACTIONS ---
+
+        // LISTEN FOR FORM SUBMISSIONS TO ADD A PLAYER
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const player = {
                 name: document.getElementById('playerName').value,
                 rollNumber: document.getElementById('rollNumber').value,
                 pool: document.getElementById('playerPool').value,
-                sport: document.getElementById('playerSport').value
+                sport: document.getElementById('playerSport').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() // Adds a timestamp
             };
-            
-            players.push(player);
-            
-            // Show success message
-            const successMessage = document.getElementById('successMessage');
-            successMessage.classList.remove('hidden');
-            setTimeout(() => {
-                successMessage.classList.add('hidden');
-            }, 3000);
-            
-            // Reset form
-            this.reset();
-            
-            // Update display
-            updateStats();
-            renderPlayersTable();
+
+            // Add the new player to the Firestore database
+            playersCollection.add(player).then(() => {
+                console.log("Player successfully added!");
+
+                const successMessage = document.getElementById('successMessage');
+                successMessage.classList.remove('hidden');
+                setTimeout(() => {
+                    successMessage.classList.add('hidden');
+                }, 3000);
+
+                this.reset();
+            }).catch(error => {
+                console.error("Error adding player: ", error);
+                alert("There was an error submitting your registration. Please try again.");
+            });
         });
 
+        // LISTEN FOR REAL-TIME CHANGES IN THE DATABASE
+        playersCollection.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+            const playersData = [];
+            snapshot.forEach(doc => {
+                playersData.push(doc.data());
+            });
+
+            allPlayers = playersData; // Update our global players array
+
+            // Re-render everything with the new data
+            updateStats();
+            filterPlayers(); // This calls renderPlayersTable inside it
+        });
+
+
+        // Add event listeners for filters
         document.getElementById('poolFilter').addEventListener('change', filterPlayers);
         document.getElementById('sportFilter').addEventListener('change', filterPlayers);
-
-        // Initialize
-        updateStats();
     </script>
 </body>
 </html>
