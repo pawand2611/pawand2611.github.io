@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freshers' Inferno 2025 - Team Registration | IIT Kanpur</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .gsc-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        .inferno-bg {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
+        }
+        .register-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .pool-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        .pool-peshwas { background: #dc2626; }
+        .pool-aryans { background: #2563eb; }
+        .pool-kshatriyas { background: #059669; }
+        .pool-nawabs { background: #7c3aed; }
+        .pool-bhishmas { background: #ea580c; }
+        .pool-jodhabai { background: #db2777; }
+        .pool-laxmibai { background: #0891b2; }
+        .pool-padmavati { background: #65a30d; }
+        .pool-durgavati { background: #dc2626; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <div class="inferno-bg text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="flex items-center mb-6 md:mb-0">
+                    <div class="gsc-logo mr-6">
+                        <div>
+                            <div>GAMES &</div>
+                            <div>SPORTS</div>
+                            <div>COUNCIL</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-4xl md:text-5xl font-bold mb-2">Freshers' Inferno 2025</h1>
+                        <p class="text-xl opacity-90">Games and Sports Council, IIT Kanpur</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-fire text-6xl mb-2 animate-pulse"></i>
+                    <p class="text-lg font-semibold">Team Registration Portal</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Registration Form -->
+            <div class="register-card rounded-xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
+                    <i class="fas fa-user-plus mr-3 text-red-600"></i>
+                    Player Registration
+                </h2>
+                
+                <form id="registrationForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-user mr-2"></i>Player Name
+                        </label>
+                        <input type="text" id="playerName" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
+                               placeholder="Enter player's full name">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-id-card mr-2"></i>Roll Number
+                        </label>
+                        <input type="text" id="rollNumber" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
+                               placeholder="Enter roll number">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-shield-alt mr-2"></i>Pool
+                        </label>
+                        <select id="playerPool" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
+                            <option value="">Select Pool</option>
+                            <option value="Peshwas">Peshwas</option>
+                            <option value="Aryans">Aryans</option>
+                            <option value="Kshatriyas">Kshatriyas</option>
+                            <option value="Nawabs">Nawabs</option>
+                            <option value="Bhishmas">Bhishmas</option>
+                            <option value="Jodhabai">Jodhabai</option>
+                            <option value="Laxmibai">Laxmibai</option>
+                            <option value="Padmavati">Padmavati</option>
+                            <option value="Durgavati">Durgavati</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-trophy mr-2"></i>Sport
+                        </label>
+                        <select id="playerSport" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200">
+                            <option value="">Select Sport</option>
+                            <option value="Athletics">Athletics</option>
+                            <option value="Aquatics">Aquatics</option>
+                            <option value="Volleyball">Volleyball</option>
+                            <option value="Basketball">Basketball</option>
+                            <option value="Cricket">Cricket</option>
+                            <option value="Football">Football</option>
+                            <option value="Hockey">Hockey</option>
+                            <option value="Table Tennis">Table Tennis</option>
+                            <option value="Lawn Tennis">Lawn Tennis</option>
+                            <option value="Badminton">Badminton</option>
+                            <option value="Squash">Squash</option>
+                            <option value="Powerlifting">Powerlifting</option>
+                            <option value="Chess">Chess</option>
+                            <option value="Tug of War">Tug of War</option>
+                            <option value="Arm Wrestling">Arm Wrestling</option>
+                            <option value="E-Sports">E-Sports</option>
+                            <option value="UFS">UFS</option>
+                            <option value="Carrom">Carrom</option>
+                            <option value="March Past">March Past</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="w-full inferno-bg text-white py-3 px-6 rounded-lg font-semibold text-lg hover:bg-red-700 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-fire mr-2"></i>Register Player
+                    </button>
+                </form>
+                
+                <div id="successMessage" class="hidden mt-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                    <i class="fas fa-check-circle mr-2"></i>Player registered successfully!
+                </div>
+            </div>
+
+            <!-- Statistics Panel -->
+            <div class="register-card rounded-xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
+                    <i class="fas fa-chart-bar mr-3 text-red-600"></i>
+                    Registration Stats
+                </h2>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-gradient-to-r from-red-500 to-red-600 text-white p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold" id="totalPlayers">0</div>
+                        <div class="text-sm opacity-90">Total Players</div>
+                    </div>
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold" id="totalSports">0</div>
+                        <div class="text-sm opacity-90">Sports Covered</div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-700">Pool Distribution</h3>
+                    <div id="poolStats" class="grid grid-cols-3 gap-2">
+                        <!-- Pool stats will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registered Players Section -->
+        <div class="mt-8 register-card rounded-xl shadow-2xl p-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4 md:mb-0 flex items-center">
+                    <i class="fas fa-users mr-3 text-red-600"></i>
+                    Registered Players
+                </h2>
+                
+                <!-- Filters -->
+                <div class="flex flex-col md:flex-row gap-4">
+                    <select id="poolFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                        <option value="">All Pools</option>
+                        <option value="Peshwas">Peshwas</option>
+                        <option value="Aryans">Aryans</option>
+                        <option value="Kshatriyas">Kshatriyas</option>
+                        <option value="Nawabs">Nawabs</option>
+                        <option value="Bhishmas">Bhishmas</option>
+                        <option value="Jodhabai">Jodhabai</option>
+                        <option value="Laxmibai">Laxmibai</option>
+                        <option value="Padmavati">Padmavati</option>
+                        <option value="Durgavati">Durgavati</option>
+                    </select>
+                    
+                    <select id="sportFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                        <option value="">All Sports</option>
+                        <option value="Athletics">Athletics</option>
+                        <option value="Aquatics">Aquatics</option>
+                        <option value="Volleyball">Volleyball</option>
+                        <option value="Basketball">Basketball</option>
+                        <option value="Cricket">Cricket</option>
+                        <option value="Football">Football</option>
+                        <option value="Hockey">Hockey</option>
+                        <option value="Table Tennis">Table Tennis</option>
+                        <option value="Lawn Tennis">Lawn Tennis</option>
+                        <option value="Badminton">Badminton</option>
+                        <option value="Squash">Squash</option>
+                        <option value="Powerlifting">Powerlifting</option>
+                        <option value="Chess">Chess</option>
+                        <option value="Tug of War">Tug of War</option>
+                        <option value="Arm Wrestling">Arm Wrestling</option>
+                        <option value="E-Sports">E-Sports</option>
+                        <option value="UFS">UFS</option>
+                        <option value="Carrom">Carrom</option>
+                        <option value="March Past">March Past</option>
+                    </select>
+                    
+                    <button onclick="clearFilters()" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-200">
+                        <i class="fas fa-times mr-2"></i>Clear Filters
+                    </button>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.No</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pool</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sport</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playersTableBody" class="bg-white divide-y divide-gray-200">
+                        <tr id="noPlayersRow">
+                            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                                <i class="fas fa-users text-4xl mb-4 opacity-50"></i>
+                                <div>No players registered yet. Be the first to register!</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-lg font-semibold mb-2">Freshers' Inferno 2025</p>
+            <p class="opacity-75">Games and Sports Council, Indian Institute of Technology Kanpur</p>
+            <div class="mt-4 flex justify-center space-x-6">
+                <i class="fab fa-facebook text-2xl hover:text-blue-400 cursor-pointer transition-colors"></i>
+                <i class="fab fa-twitter text-2xl hover:text-blue-300 cursor-pointer transition-colors"></i>
+                <i class="fab fa-instagram text-2xl hover:text-pink-400 cursor-pointer transition-colors"></i>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let players = [];
+        
+        function getPoolClass(pool) {
+            return 'pool-' + pool.toLowerCase();
+        }
+
+        function updateStats() {
+            document.getElementById('totalPlayers').textContent = players.length;
+            
+            const uniqueSports = [...new Set(players.map(p => p.sport))];
+            document.getElementById('totalSports').textContent = uniqueSports.length;
+            
+            // Update pool distribution
+            const poolCounts = {};
+            const pools = ['Peshwas', 'Aryans', 'Kshatriyas', 'Nawabs', 'Bhishmas', 'Jodhabai', 'Laxmibai', 'Padmavati', 'Durgavati'];
+            pools.forEach(pool => poolCounts[pool] = 0);
+            
+            players.forEach(player => {
+                poolCounts[player.pool]++;
+            });
+            
+            const poolStatsHtml = pools.map(pool => 
+                `<div class="text-center p-2 bg-gray-50 rounded">
+                    <div class="pool-badge ${getPoolClass(pool)}">${pool}</div>
+                    <div class="text-lg font-bold mt-1">${poolCounts[pool]}</div>
+                </div>`
+            ).join('');
+            
+            document.getElementById('poolStats').innerHTML = poolStatsHtml;
+        }
+
+        function renderPlayersTable(filteredPlayers = players) {
+            const tbody = document.getElementById('playersTableBody');
+            const noPlayersRow = document.getElementById('noPlayersRow');
+            
+            if (filteredPlayers.length === 0) {
+                noPlayersRow.style.display = 'table-row';
+                tbody.innerHTML = noPlayersRow.outerHTML;
+                return;
+            }
+            
+            const playersHtml = filteredPlayers.map((player, index) => `
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${player.name}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${player.rollNumber}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="pool-badge ${getPoolClass(player.pool)}">${player.pool}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <i class="fas fa-trophy mr-2 text-yellow-500"></i>
+                            <span class="text-sm font-medium text-gray-900">${player.sport}</span>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            tbody.innerHTML = playersHtml;
+        }
+
+        function filterPlayers() {
+            const poolFilter = document.getElementById('poolFilter').value;
+            const sportFilter = document.getElementById('sportFilter').value;
+            
+            let filteredPlayers = players;
+            
+            if (poolFilter) {
+                filteredPlayers = filteredPlayers.filter(player => player.pool === poolFilter);
+            }
+            
+            if (sportFilter) {
+                filteredPlayers = filteredPlayers.filter(player => player.sport === sportFilter);
+            }
+            
+            renderPlayersTable(filteredPlayers);
+        }
+
+        function clearFilters() {
+            document.getElementById('poolFilter').value = '';
+            document.getElementById('sportFilter').value = '';
+            renderPlayersTable();
+        }
+
+        // Event Listeners
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const player = {
+                name: document.getElementById('playerName').value,
+                rollNumber: document.getElementById('rollNumber').value,
+                pool: document.getElementById('playerPool').value,
+                sport: document.getElementById('playerSport').value
+            };
+            
+            players.push(player);
+            
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.classList.remove('hidden');
+            setTimeout(() => {
+                successMessage.classList.add('hidden');
+            }, 3000);
+            
+            // Reset form
+            this.reset();
+            
+            // Update display
+            updateStats();
+            renderPlayersTable();
+        });
+
+        document.getElementById('poolFilter').addEventListener('change', filterPlayers);
+        document.getElementById('sportFilter').addEventListener('change', filterPlayers);
+
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>
