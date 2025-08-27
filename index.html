@@ -48,7 +48,6 @@
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
-    <!-- Header -->
     <div class="inferno-bg text-white py-8">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center justify-between">
@@ -66,8 +65,14 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <i class="fas fa-fire text-6xl mb-2 animate-pulse"></i>
-                    <p class="text-lg font-semibold">Team Registration Portal</p>
+                    <a href="pool-captain-login.html" class="mb-4 inline-block bg-white bg-opacity-20 text-white font-semibold py-2 px-5 border border-white rounded-lg hover:bg-opacity-30 transition-all duration-200">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Admin Login
+                    </a>
+                    <div>
+                        <i class="fas fa-fire text-5xl mb-2 animate-pulse"></i>
+                        <p class="text-lg font-semibold">Team Registration Portal</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,7 +80,6 @@
 
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Registration Form -->
             <div class="register-card rounded-xl shadow-2xl p-8">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
                     <i class="fas fa-user-plus mr-3 text-red-600"></i>
@@ -159,7 +163,6 @@
                 </div>
             </div>
 
-            <!-- Statistics Panel -->
             <div class="register-card rounded-xl shadow-2xl p-8">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
                     <i class="fas fa-chart-bar mr-3 text-red-600"></i>
@@ -180,13 +183,11 @@
                 <div class="space-y-4">
                     <h3 class="text-lg font-semibold text-gray-700">Pool Distribution</h3>
                     <div id="poolStats" class="grid grid-cols-3 gap-2">
-                        <!-- Pool stats will be generated here -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
 
-        <!-- Registered Players Section -->
         <div class="mt-8 register-card rounded-xl shadow-2xl p-8">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <h2 class="text-3xl font-bold text-gray-800 mb-4 md:mb-0 flex items-center">
@@ -194,7 +195,6 @@
                     Registered Players
                 </h2>
                 
-                <!-- Filters -->
                 <div class="flex flex-col md:flex-row gap-4">
                     <select id="poolFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
                         <option value="">All Pools</option>
@@ -253,7 +253,7 @@
                         <tr id="noPlayersRow">
                             <td colspan="5" class="px-6 py-8 text-center text-gray-500">
                                 <i class="fas fa-users text-4xl mb-4 opacity-50"></i>
-                                <div>No players registered yet. Be the first to register!</div>
+                                <div>No players have been verified yet.</div>
                             </td>
                         </tr>
                     </tbody>
@@ -262,7 +262,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white py-6 mt-16">
         <div class="container mx-auto px-4 text-center">
             <p class="text-lg font-semibold mb-2">Freshers' Inferno 2025</p>
@@ -274,12 +273,12 @@
             </div>
         </div>
     </footer>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore-compat.js"></script>
     
     <script>
-                // --- 1. INITIALIZE FIREBASE ---
-        // TODO: PASTE YOUR FIREBASE CONFIGURATION KEYS HERE
+        // --- 1. INITIALIZE FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyDp3jQqpYkuYo2TMaNTJ_CcXO0vDpQi2gA",
             authDomain: "inferno-registration-gns.firebaseapp.com",
@@ -292,10 +291,10 @@
         // Initialize Firebase and Firestore
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const playersCollection = db.collection('players'); // We'll store players in a "collection" called 'players'
+        const playersCollection = db.collection('players');
 
         // --- 2. GLOBAL VARIABLES & HELPER FUNCTIONS ---
-        let allPlayers = []; // This will hold the players from the database
+        let allPlayers = [];
 
         function getPoolClass(pool) {
             return 'pool-' + pool.toLowerCase().replace(' ', '-');
@@ -304,39 +303,32 @@
         // --- 3. RENDERING AND STATS FUNCTIONS (Updates the screen) ---
         function updateStats() {
             document.getElementById('totalPlayers').textContent = allPlayers.length;
-
             const uniqueSports = [...new Set(allPlayers.map(p => p.sport))];
             document.getElementById('totalSports').textContent = uniqueSports.length;
-
             const poolCounts = {};
             const pools = ['Peshwas', 'Aryans', 'Kshatriyas', 'Nawabs', 'Bhishmas', 'Jodhabai', 'Laxmibai', 'Padmavati', 'Durgavati'];
             pools.forEach(pool => poolCounts[pool] = 0);
-
             allPlayers.forEach(player => {
                 if (poolCounts.hasOwnProperty(player.pool)) {
                     poolCounts[player.pool]++;
                 }
             });
-
             const poolStatsHtml = pools.map(pool => 
                 `<div class="text-center p-2 bg-gray-50 rounded">
                     <div class="pool-badge ${getPoolClass(pool)}">${pool}</div>
                     <div class="text-lg font-bold mt-1">${poolCounts[pool]}</div>
                 </div>`
             ).join('');
-            
             document.getElementById('poolStats').innerHTML = poolStatsHtml;
         }
 
         function renderPlayersTable(filteredPlayers = allPlayers) {
             const tbody = document.getElementById('playersTableBody');
             const noPlayersRow = document.getElementById('noPlayersRow');
-
             if (filteredPlayers.length === 0) {
                 tbody.innerHTML = noPlayersRow.outerHTML;
                 return;
             }
-
             const playersHtml = filteredPlayers.map((player, index) => `
                 <tr class="hover:bg-gray-50 transition-colors duration-150">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
@@ -355,7 +347,6 @@
                     </td>
                 </tr>
             `).join('');
-            
             tbody.innerHTML = playersHtml;
         }
 
@@ -363,17 +354,13 @@
         function filterPlayers() {
             const poolFilter = document.getElementById('poolFilter').value;
             const sportFilter = document.getElementById('sportFilter').value;
-
             let filteredPlayers = allPlayers;
-
             if (poolFilter) {
                 filteredPlayers = filteredPlayers.filter(player => player.pool === poolFilter);
             }
-
             if (sportFilter) {
                 filteredPlayers = filteredPlayers.filter(player => player.sport === sportFilter);
             }
-
             renderPlayersTable(filteredPlayers);
         }
 
@@ -384,29 +371,23 @@
         }
 
         // --- 5. FIREBASE INTERACTIONS ---
-
-        // LISTEN FOR FORM SUBMISSIONS TO ADD A PLAYER
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
             const player = {
                 name: document.getElementById('playerName').value,
                 rollNumber: document.getElementById('rollNumber').value,
                 pool: document.getElementById('playerPool').value,
                 sport: document.getElementById('playerSport').value,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp() // Adds a timestamp
+                status: 'pending',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
-
-            // Add the new player to the Firestore database
             playersCollection.add(player).then(() => {
                 console.log("Player successfully added!");
-
                 const successMessage = document.getElementById('successMessage');
                 successMessage.classList.remove('hidden');
                 setTimeout(() => {
                     successMessage.classList.add('hidden');
                 }, 3000);
-
                 this.reset();
             }).catch(error => {
                 console.error("Error adding player: ", error);
@@ -414,22 +395,16 @@
             });
         });
 
-        // LISTEN FOR REAL-TIME CHANGES IN THE DATABASE
-        playersCollection.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+        playersCollection.where('status', '==', 'verified').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
             const playersData = [];
             snapshot.forEach(doc => {
                 playersData.push(doc.data());
             });
-
-            allPlayers = playersData; // Update our global players array
-
-            // Re-render everything with the new data
+            allPlayers = playersData;
             updateStats();
-            filterPlayers(); // This calls renderPlayersTable inside it
+            filterPlayers(); 
         });
 
-
-        // Add event listeners for filters
         document.getElementById('poolFilter').addEventListener('change', filterPlayers);
         document.getElementById('sportFilter').addEventListener('change', filterPlayers);
     </script>
